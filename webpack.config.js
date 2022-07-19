@@ -15,11 +15,12 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.png$/,
-        loader: "file-loader",
-        options: {
-          publicPath: "./dist",
-          name: "[name].[ext]?[hash]",
+        test: /\.(png|jpg|jpeg|gif|svg)$/,
+        type: "asset", // 40KB(default) 미만은 inline, 이상은 resource로 대처
+        parser: {
+          dataUrlCondition: {
+            maxSize: 20 * 1024, // 기준을 20KB 로 변경
+          },
         },
       },
     ],
