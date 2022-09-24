@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "start": "webpack serve --progress"
   },
   "author": "",
   "license": "ISC",
@@ -37,5 +38,8 @@
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix"
+  },
+  "dependencies": {
+    "webpack-dev-server": "^4.11.1"
   }
 }

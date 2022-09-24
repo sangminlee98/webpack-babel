@@ -1,3 +1,3 @@
 const foo = 10;
 
-console.log();
+console.log(foo);
