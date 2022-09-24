@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "prepare": "husky install",
-    "start": "webpack serve --progress"
+    "start": "webpack serve --open --mode=development --hot --progress"
   },
   "author": "",
   "license": "ISC",
