@@ -4,6 +4,7 @@ const ChildProcess = require("child_process"); // 터미널 명령어를 실행�
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const apiMocker = require("connect-api-mocker");
 module.exports = {
   mode: "development",
   entry: {
@@ -24,6 +25,18 @@ module.exports = {
     hot: true,
     port: 9000,
     historyApiFallback: true,
+    proxy: {
+      "/api": "http://localhost:8080", // 프록시
+    },
+    setupMiddlewares: (middlewares, devServer) => {
+      if (!devServer) {
+        throw new Error("webpack-dev-server is not defined");
+      }
+      devServer.app.use(apiMocker("/api", "mocks/api"));
+      return middlewares;
+      // middlewares.unshift(apiMocker("/api", "mocks/api"));
+      // return middlewares;
+    },
   },
   module: {
     rules: [
