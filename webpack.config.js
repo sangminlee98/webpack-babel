@@ -4,11 +4,18 @@ const ChildProcess = require("child_process"); // 터미널 명령어를 실행�
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const apiMocker = require("connect-api-mocker");
+
+const mode = process.env.NODE_ENV || "development";
+
 module.exports = {
-  mode: "development",
+  mode,
   entry: {
     main: "./src/app.js",
+    // result: "./src/result.js",
   },
   output: {
     path: path.resolve("./dist"),
@@ -37,6 +44,27 @@ module.exports = {
       // middlewares.unshift(apiMocker("/api", "mocks/api"));
       // return middlewares;
     },
+  },
+  optimization: {
+    minimizer:
+      mode === "production"
+        ? [
+            new CssMinimizerPlugin(),
+            new TerserPlugin({
+              terserOptions: {
+                compress: {
+                  drop_console: true, // 콘솔 로그를 제거한다.
+                },
+              },
+            }),
+          ]
+        : [],
+    // splitChunks: {
+    //   chunks: "all",
+    // },
+  },
+  externals: {
+    axios: "axios",
   },
   module: {
     rules: [
@@ -98,5 +126,13 @@ module.exports = {
     ...(process.env.NODE_ENV === "production"
       ? [new MiniCssExtractPlugin({ filename: "[name].css" })]
       : []),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "./node_modules/axios/dist/axios.min.js",
+          to: "./axios.min.js",
+        },
+      ],
+    }),
   ],
 };
